@@ -31,11 +31,18 @@ const generateShoppingItemsString = function (shoppingList) {
   return items.join('');
 };
 
+const generateErrorMessage = function(){
+  return `An error has occured`;
+}
+
 const render = function () {
   // Filter item list if store prop is true by item.checked === false
   let items = [...store.items];
   if (store.hideCheckedItems) {
     items = items.filter(item => !item.checked);
+  }
+  if (store.error){
+    $('.error-container').html(`<p>${generateErrorMessage}()</p>`);
   }
 
   // render the shopping list in the DOM
@@ -56,10 +63,13 @@ const handleNewItemSubmit = function () {
       .then((newItem) => {
         store.addItem(newItem);
         render();
+      })
+      .catch(err => {
+        store.setError(err.message);
+        render();
       });
-    render();
   });
-};
+}
 
 const getItemIdFromElement = function (item) {
   return $(item)
@@ -77,14 +87,12 @@ const handleDeleteItemClicked = function () {
       store.findAndDelete(id);
       render();
     })
-      .catch(error => {
-        
-      }
-    
-    // handle error
-    
+      .catch(err => {
+        store.setError(err.message);
+       render();
+      });
   });
-};
+}
 
 const handleEditShoppingItemSubmit = function () {
   $('.js-shopping-list').on('submit', '.js-edit-item', event => {
@@ -96,12 +104,13 @@ const handleEditShoppingItemSubmit = function () {
       .then(() => {
         store.findAndUpdate(id, {name: itemName});
         render();
+      })
+      .catch(err => {
+        store.setError(err.message);
+        render();
       });
-
-    // handle error
-
   });
-};
+}
 
 const handleItemCheckClicked = function () {
   $('.js-shopping-list').on('click', '.js-item-toggle', event => {
@@ -112,10 +121,13 @@ const handleItemCheckClicked = function () {
     api.updateItem(id, {checked: isChecked}).then(() => 
       store.findAndUpdate(id, {checked: isChecked})); 
     render();
-    // handle error
-
-  });
+  })
+    .catch(err => {
+      store.setError(err.message);
+      render();
+    });
 };
+
 
 const handleToggleFilterClick = function () {
   $('.js-filter-checked').click(() => {
