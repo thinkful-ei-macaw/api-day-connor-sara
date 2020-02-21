@@ -13,7 +13,7 @@ const addItem = function (item) {
 const findAndUpdate = function(id, newData) {
   let foundItem = this.items.find(item => item.id === id);
   Object.assign(foundItem, newData);
-}
+};
 
 const findAndDelete = function (id) {
   this.items = this.items.filter(currentItem => currentItem.id !== id);

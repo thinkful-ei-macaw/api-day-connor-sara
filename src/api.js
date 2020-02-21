@@ -7,17 +7,17 @@ function getItems() {
 function createItem(name){
 
   const newItem = JSON.stringify(
-  {
-    name: name
-  });
+    {
+      name: name
+    });
 
   return fetch(`${BASE_URL}/items`, {
     method: 'POST', 
     headers: {
       'Content-Type': 'application/json'
     }, 
-      body: newItem
-    });
+    body: newItem
+  });
 }
 
 function updateItem(id, updateData){
@@ -29,12 +29,19 @@ function updateItem(id, updateData){
     headers: {
       'Content-Type': 'application/json'
     },
-      body: updateDataStr
+    body: updateDataStr
   });
 }
+
+const deleteItem = function(id) {
+  return fetch(`${BASE_URL}/items/${id}`, {
+    method: 'DELETE'
+  });
+};
 
 export default {
   getItems,
   createItem,
-  updateItem
+  updateItem,
+  deleteItem
 };
